@@ -1,5 +1,7 @@
 package com.development.ordering.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class User {
     private String email;
     private String phone_number;
     private String username;
+    @JsonIgnore
     private String password;
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
