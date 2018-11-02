@@ -36,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -69,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
-    private BCryptPasswordEncoder encoder() {
+    @Bean
+    public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 }

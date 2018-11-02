@@ -19,7 +19,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder bcryptEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,7 +39,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     public void delete(long id) {
-        userRepository.delete(id);
+        userRepository.removeById(id);
     }
 
     public User findByUsername(String username) {
@@ -47,12 +47,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     public User findById(Long id) {
-        return userRepository.findOne(id);
+        return userRepository.findUserById(id);
     }
 
     public User save(User user) {
         String password = user.getPassword();
-        user.setPassword(bcryptEncoder.encode(password));
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         return userRepository.save(user);
 
     }

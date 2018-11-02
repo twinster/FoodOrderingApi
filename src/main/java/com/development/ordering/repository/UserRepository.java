@@ -12,6 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     public User findByUsername(String username);
     public List<User> findByUserRoleId(Long id);
     public List<User> findByUserRoleName(String userRoleName);
-    public void delete(Long id);
-    public User findOne(Long id);
+    public void removeById(Long id);
+    public User findUserById(Long id);
 }
