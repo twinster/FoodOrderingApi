@@ -5,4 +5,5 @@ public class Constants {
     public static final String SIGNING_KEY = "fsdfsdfds89fds98fd98f7d9s7f98ds7f9dsf79s7";
     public static final String TOKEN_PREFIX = "twinster";
     public static final String HEADER_STRING = "Authorization";
+    public static final String AUTHORITIES_KEY = "schmoppes";
 }

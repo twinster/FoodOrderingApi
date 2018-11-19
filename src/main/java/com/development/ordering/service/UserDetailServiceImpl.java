@@ -1,8 +1,11 @@
 package com.development.ordering.service;
 
 import com.development.ordering.model.User;
+import com.development.ordering.model.UserRole;
 import com.development.ordering.repository.UserRepository;
+import com.development.ordering.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service(value="userDetailsServiceImpl")
@@ -19,6 +23,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -26,10 +33,16 @@ public class UserDetailServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         if (user == null){
-            return null;
+            throw new UsernameNotFoundException("Invalid username or password.");
         }
 
-        return (UserDetails) user;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user));
+    }
+
+    private List<SimpleGrantedAuthority> getAuthority(User user) {
+        //return Arrays.asList(new SimpleGrantedAuthority(""));
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().getName()));
+
     }
 
     public List<User> findAll() {
@@ -53,6 +66,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public User save(User user) {
         String password = user.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
+        if (user.getUserRole() == null){
+            user.setUserRole(userRoleRepository.findByName("USER"));
+        }
         return userRepository.save(user);
 
     }
