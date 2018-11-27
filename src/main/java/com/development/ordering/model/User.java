@@ -3,6 +3,7 @@ package com.development.ordering.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -19,6 +20,12 @@ public class User {
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
     private UserRole userRole;
+
+    @OneToMany
+    private List<Order> orders;
+
+    @OneToMany
+    private List<Order> confirmedOrders; //??
 
     public User(){}
 
