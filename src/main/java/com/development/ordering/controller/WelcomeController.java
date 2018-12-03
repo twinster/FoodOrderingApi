@@ -9,4 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController {
 
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public boolean test(){
+        return true;
+    }
 }

@@ -15,10 +15,13 @@ public class User {
     private String email;
     private String phone_number;
     private String username;
+    @JsonIgnore
     private String password;
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
     private UserRole userRole;
+    @Transient
+    private String token;
 
     public User(){}
 
@@ -106,5 +109,13 @@ public class User {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

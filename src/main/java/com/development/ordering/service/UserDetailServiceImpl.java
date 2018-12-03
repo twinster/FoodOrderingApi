@@ -12,9 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.Collections;
 
 @Service(value="userDetailsServiceImpl")
 public class UserDetailServiceImpl implements UserDetailsService {
@@ -36,40 +35,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.singleton(getAuthority(user)));
     }
 
-    private List<SimpleGrantedAuthority> getAuthority(User user) {
+    private SimpleGrantedAuthority getAuthority(User user) {
         //return Arrays.asList(new SimpleGrantedAuthority(""));
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().getName()));
-
-    }
-
-    public List<User> findAll() {
-        List<User> list = new ArrayList<>();
-        userRepository.findAll().iterator().forEachRemaining(list::add);
-        return list;
-    }
-
-    public void delete(long id) {
-        userRepository.removeById(id);
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public User findById(Long id) {
-        return userRepository.findUserById(id);
-    }
-
-    public User save(User user) {
-        String password = user.getPassword();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-        if (user.getUserRole() == null){
-            user.setUserRole(userRoleRepository.findByName("USER"));
-        }
-        return userRepository.save(user);
+        return new SimpleGrantedAuthority(user.getUserRole().getName());
 
     }
 }

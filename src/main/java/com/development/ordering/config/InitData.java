@@ -26,17 +26,16 @@ public class InitData {
 
     @Bean
     public boolean insertTestData(){
-        //try{
+        try{
             userRoleService.addOrUpdateUserRole(new UserRole("ADMIN"));
             userRoleService.addOrUpdateUserRole(new UserRole("USER"));
-            userService.addOrUpdateUser(new User("admin", "admin", "admin@gmail.com", "11211", "admin", bCryptPasswordEncoder.encode("admin"), userRoleService.getUserRoleByName("ADMIN")));
-            userService.addOrUpdateUser(new User("user", "user", "user@gmail.com", "11211", "user", bCryptPasswordEncoder.encode("admin"), userRoleService.getUserRoleByName("USER")));
-        //    return true;
-        //}
-        //catch (Exception e){
-        //    System.out.println("error while inserting data " + e.toString());
-        //    return false;
-        //}
-        return true;
+            userService.save(new User("admin", "admin", "admin@gmail.com", "11211", "admin", "admin", userRoleService.getUserRoleByName("ADMIN")));
+            userService.save(new User("user", "user", "user@gmail.com", "11211", "user","admin", userRoleService.getUserRoleByName("USER")));
+            return true;
+        }
+        catch (Exception e){
+            System.out.println("error while inserting data " + e.toString());
+            return false;
+        }
     }
 }
