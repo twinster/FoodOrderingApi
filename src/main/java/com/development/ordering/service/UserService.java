@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class UserService {
                        UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userRoleRepository = userRoleRepository;
     }
 
     public List<User> getAllUsers() {
@@ -56,13 +58,19 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public User save(User user) {
+    public User save(User user) throws Exception {
         String password = user.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
         if (user.getUserRole() == null){
             user.setUserRole(userRoleRepository.findByName("USER"));
         }
-        return userRepository.save(user);
+        try{
+            return userRepository.save(user);
+        }
+        catch (Exception e){
+            throw e;
+        }
+
 
     }
 }

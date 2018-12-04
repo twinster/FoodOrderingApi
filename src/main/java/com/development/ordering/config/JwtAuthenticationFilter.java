@@ -15,15 +15,14 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import sun.plugin.liveconnect.SecurityContextHelper;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.development.ordering.model.Constants.HEADER_STRING;
@@ -46,69 +45,86 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //            String value = req.getHeader(key);
 //
 //        }
+//
+        Map<String, String> map = new HashMap<String, String>();
+
+        Enumeration headerNames = req.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = req.getHeader(key);
+            map.put(key, value);
+        }
+
+
 
         String header = req.getHeader(HEADER_STRING);
+        String username = "";
+        String authToken = "";
 
 
-        if(header == null || !header.startsWith(TOKEN_PREFIX)) {
-            chain.doFilter(req, res);  		// If not valid, go to the next filter.
+
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            authToken = header.replace(TOKEN_PREFIX, "");
+            try {
+                username = jwtTokenUtil.getUsernameFromToken(authToken);
+            } catch (IllegalArgumentException e) {
+                logger.error("an error occured during getting username from token", e);
+            } catch (ExpiredJwtException e) {
+                logger.warn("the token is expired and not valid anymore", e);
+            } catch(SignatureException e){
+                logger.error("Authentication Failed. Username or Password not valid.");
+            }
+        } else {
+            logger.warn("couldn't find bearer string, will ignore the header");
             return;
         }
 
-        String authToken = header.replace(TOKEN_PREFIX, "");
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        try {    // exceptions might be thrown in creating the claims if for example the token is expired
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // 4. Validate the token
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SIGNING_KEY)
-                    .parseClaimsJws(authToken)
-                    .getBody();
-
-            String username = claims.getSubject();
-
-            if (username != null) {
-                List<String> authorities = (List<String>) claims.get("authorities");
-
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-
-                // 6. Authenticate the user
-                // Now, user is authenticated
-                SecurityContextHolder.getContext().setAuthentication(auth);
+            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = jwtTokenUtil.getAuthentication(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails);
+                //UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                logger.info("authenticated user " + username + ", setting security context");
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-        catch (Exception e){
-            SecurityContextHolder.clearContext();
-        }
-
-
-//        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-//            try {
-//                username = jwtTokenUtil.getUsernameFromToken(authToken);
-//            } catch (IllegalArgumentException e) {
-//                logger.error("an error occured during getting username from token", e);
-//            } catch (ExpiredJwtException e) {
-//                logger.warn("the token is expired and not valid anymore", e);
-//            } catch(SignatureException e){
-//                logger.error("Authentication Failed. Username or Password not valid.");
-//            }
-//        } else {
-//            logger.warn("couldn't find bearer string, will ignore the header");
-//        }
-//        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//
-//            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-//                UsernamePasswordAuthenticationToken authentication = jwtTokenUtil.getAuthentication(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails);
-//                //UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-//                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-//                logger.info("authenticated user " + username + ", setting security context");
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//            }
-//        }
 
         chain.doFilter(req, res);
     }
+
+    //
+//        if(header == null || !header.startsWith(TOKEN_PREFIX)) {
+//            chain.doFilter(req, res);  		// If not valid, go to the next filter.
+//            return;
+//        }
+//
+//        String authToken = header.replace(TOKEN_PREFIX, "");
+//
+//        try {    // exceptions might be thrown in creating the claims if for example the token is expired
+//
+//            // 4. Validate the token
+//            Claims claims = Jwts.parser()
+//                    .setSigningKey(SIGNING_KEY)
+//                    .parseClaimsJws(authToken)
+//                    .getBody();
+//
+//            String username = claims.getSubject();
+//
+//            if (username != null) {
+//                List<String> authorities = (List<String>) claims.get("authorities");
+//
+//                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+//                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+//
+//                // 6. Authenticate the user
+//                // Now, user is authenticated
+//                SecurityContextHolder.getContext().setAuthentication(auth);
+//            }
+//        }
+//        catch (Exception e){
+//            SecurityContextHolder.clearContext();
+//        }
 }

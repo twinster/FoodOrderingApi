@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @RequestMapping(value="/signup", method = RequestMethod.POST)
-    public User saveUser(@RequestBody User user){
+    public User saveUser(@RequestBody User user) throws Exception{
         return userService.save(user);
     }
 

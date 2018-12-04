@@ -13,10 +13,12 @@ public class User {
     private Long id;
     private String name;
     private String position;
+    @Column(unique = true)
     private String email;
     private String phone_number;
+    @Column(unique = true)
     private String username;
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
