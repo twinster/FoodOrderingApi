@@ -58,8 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         String header = req.getHeader(HEADER_STRING);
-        String username = "";
-        String authToken = "";
+        String username = null;
+        String authToken = null;
 
 
 
@@ -76,7 +76,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } else {
             logger.warn("couldn't find bearer string, will ignore the header");
-            return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
