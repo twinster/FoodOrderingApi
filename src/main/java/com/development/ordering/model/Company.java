@@ -4,13 +4,14 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "company")
+@Table(name = "companies")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String webpage_url;
+    @Column(name = "webpage_url")
+    private String webPageUrl;
 
     @OneToMany
     private List<Menu> menus;
@@ -23,7 +24,7 @@ public class Company {
 
     public Company(String name, String webpage_url) {
         setName(name);
-        setWebpageUrl(webpage_url);
+        setWebPageUrl(webpage_url);
     }
 
     public Long getId() {
@@ -42,11 +43,11 @@ public class Company {
         this.name = name;
     }
 
-    public String getWebpageUrl() {
-        return webpage_url;
+    public String getWebPageUrl() {
+        return webPageUrl;
     }
 
-    public void setWebpageUrl(String web_page_url) {
-        this.webpage_url = web_page_url;
+    public void setWebPageUrl(String web_page_url) {
+        this.webPageUrl = web_page_url;
     }
 }
