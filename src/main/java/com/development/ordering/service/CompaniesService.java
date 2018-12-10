@@ -28,7 +28,7 @@ public class CompaniesService {
             return company;
         }
         catch (ResourceNotFoundException e){
-            throw new ResourceNotFoundException("Employee not found for this id :: " + id);
+            throw new ResourceNotFoundException("Company not found for this id :: " + id);
         }
     }
 

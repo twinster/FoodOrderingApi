@@ -9,8 +9,8 @@ public class WeekDays {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private final String day;
-    private final String englishName;
+    private String day;
+    private String englishName;
 
     @OneToMany
     public List<Menu> menus;
@@ -20,6 +20,8 @@ public class WeekDays {
 
     @ManyToMany(mappedBy="weekDays")
     private List<Company> companies;
+
+    public WeekDays(){}
 
     private WeekDays(String day, String englishName) {
         this.day = day;

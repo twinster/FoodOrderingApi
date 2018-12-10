@@ -50,4 +50,12 @@ public class Company {
     public void setWebPageUrl(String web_page_url) {
         this.webPageUrl = web_page_url;
     }
+
+    public List<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
+    }
 }

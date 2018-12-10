@@ -4,22 +4,19 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "menu")
+@Table(name = "menus")
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String path;
     private Integer week_num;
-
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-
     @ManyToOne
     @JoinColumn(name = "week_day_id", nullable = false)
     private WeekDays weekDays;
-
     @OneToMany
     private List<Order> orders;
 
@@ -61,5 +58,21 @@ public class Menu {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public WeekDays getWeekDays() {
+        return weekDays;
+    }
+
+    public void setWeekDays(WeekDays weekDays) {
+        this.weekDays = weekDays;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }
