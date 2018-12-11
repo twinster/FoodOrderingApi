@@ -13,13 +13,12 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/admin/users")
-@PreAuthorize("hasAuthority('USER')")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class UsersController {
 
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List listUser(){
         return userService.findAll();

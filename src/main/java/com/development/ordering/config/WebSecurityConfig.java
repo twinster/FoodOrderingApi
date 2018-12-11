@@ -47,6 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests().antMatchers("/admin").access("hasAuthority('ADMIN')");
+
         http.cors().and().csrf().disable().
                 authorizeRequests()
                 .antMatchers("/login", "/signup").permitAll()

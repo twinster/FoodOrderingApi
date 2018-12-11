@@ -15,32 +15,32 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/admin/companies")
-//@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class CompaniesController {
     @Autowired
     private CompaniesService companyService;
 
     //@Secured("ROLE_USER")
-    @PreAuthorize("hasAuthority('USER')")
+    //@PreAuthorize("hasAuthority('USER')")
     ////@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @RequestMapping(method= RequestMethod.GET, value="/list")
     public List<Company> getAllCompanies() {
         return companyService.getAllCompanies();
     }
 
-    @Secured("USER")
+    //@Secured("USER")
     @RequestMapping(method=RequestMethod.POST, value="/")
     public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
         return ResponseEntity.ok().body(companyService.addOrUpdateCompany(company));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'Jemali')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER', 'Jemali')")
     @RequestMapping(method=RequestMethod.GET, value="/{id}/edit")
     public Company getCompany(@PathVariable long id) throws ResourceNotFoundException {
         return companyService.getCompany(id);
     }
 
-    @PreAuthorize("hasRole('Jemali')")
+    //@PreAuthorize("hasRole('Jemali')")
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
     public ResponseEntity<Company> updateCompany(@RequestBody Company company, @PathVariable(value = "id") long id) {
         return  ResponseEntity.ok().body(companyService.addOrUpdateCompany(company));
