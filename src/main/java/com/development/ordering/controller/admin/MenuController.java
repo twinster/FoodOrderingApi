@@ -1,4 +1,4 @@
-package com.development.ordering.controller;
+package com.development.ordering.controller.admin;
 
 import com.development.ordering.model.Company;
 import com.development.ordering.model.Menu;
@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/menus")
+@RequestMapping("/admin/menus")
 public class MenuController {
     @Autowired
     private MenuService menuService;

@@ -38,12 +38,4 @@ public class UserRole {
         this.name = name;
     }
 
-    public List<User> getUserAcounts() {
-        return users;
-    }
-
-    public void setUserAcounts(List<User> users) {
-        this.users = users;
-    }
-
 }

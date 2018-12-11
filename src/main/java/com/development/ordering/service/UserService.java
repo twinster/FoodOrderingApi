@@ -60,10 +60,14 @@ public class UserService {
 
     public User save(User user) throws Exception {
         String password = user.getPassword();
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        if (user.getPassword() != null){
+            user.setPassword(bCryptPasswordEncoder.encode(password));
+        }
+
         if (user.getUserRole() == null){
             user.setUserRole(userRoleRepository.findByName("USER"));
         }
+
         try{
             return userRepository.save(user);
         }

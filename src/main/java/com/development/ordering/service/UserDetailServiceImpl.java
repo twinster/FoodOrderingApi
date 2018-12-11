@@ -1,7 +1,6 @@
 package com.development.ordering.service;
 
 import com.development.ordering.model.User;
-import com.development.ordering.model.UserRole;
 import com.development.ordering.repository.UserRepository;
 import com.development.ordering.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service(value="userDetailsServiceImpl")
 public class UserDetailServiceImpl implements UserDetailsService {
@@ -35,12 +36,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.singleton(getAuthority(user)));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user));
     }
 
-    private SimpleGrantedAuthority getAuthority(User user) {
-        //return Arrays.asList(new SimpleGrantedAuthority(""));
-        return new SimpleGrantedAuthority(user.getUserRole().getName());
-
+    private Set<SimpleGrantedAuthority> getAuthority(User user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(user.getUserRole().getName()));
+        return authorities;
+        //alternative
+        //return new SimpleGrantedAuthority(user.getUserRole().getName());
     }
 }

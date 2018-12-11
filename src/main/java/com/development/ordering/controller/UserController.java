@@ -4,7 +4,9 @@ package com.development.ordering.controller;
 import com.development.ordering.model.User;
 import com.development.ordering.service.UserDetailServiceImpl;
 import com.development.ordering.service.UserService;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,37 +14,19 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public List listUser(){
-        return userService.findAll();
-    }
-
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
     public User getOne(@PathVariable(value = "id") Long id){
         return userService.findById(id);
     }
 
-    @RequestMapping(value="/signup", method = RequestMethod.POST)
-    public User saveUser(@RequestBody User user) throws Exception{
+    @RequestMapping(value="/{id}", method = RequestMethod.PUT)
+    public User saveUser(@RequestBody User user, @PathVariable(value = "id") Long id) throws Exception{
         return userService.save(user);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/user/{id}", method = RequestMethod.DELETE)
-    public boolean deleteUser(@PathVariable(value = "id") Long id){
-        try {
-            userService.delete(id);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
-
-    }
-
 }
