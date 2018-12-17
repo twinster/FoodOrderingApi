@@ -5,8 +5,8 @@ import com.development.ordering.service.CompaniesService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,7 +42,7 @@ public class CompaniesController {
 
     //@PreAuthorize("hasRole('Jemali')")
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
-    public ResponseEntity<Company> updateCompany(@RequestBody Company company, @PathVariable(value = "id") long id) {
+    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company, @PathVariable(value = "id") long id) {
         return  ResponseEntity.ok().body(companyService.addOrUpdateCompany(company));
     }
 

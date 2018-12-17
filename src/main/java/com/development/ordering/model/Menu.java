@@ -1,5 +1,8 @@
 package com.development.ordering.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,19 +14,19 @@ public class Menu {
     private Long id;
     private String path;
     private Integer week_num;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
     @ManyToOne
-    @JoinColumn(name = "week_day_id", nullable = false)
+    @JoinColumn(name = "week_day_id")
     private WeekDays weekDays;
-    @OneToMany
-    private List<Order> orders;
 
     public Menu() {
     }
 
-    public Menu(String path, Integer week_num) {
+    public Menu(String path, Integer week_num, Long company_id) {
         this.setPath(path);
         this.setWeekNum(week_num);
     }
@@ -68,11 +71,4 @@ public class Menu {
         this.weekDays = weekDays;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
 }

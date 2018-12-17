@@ -13,7 +13,7 @@ public class Company {
     @Column(name = "webpage_url")
     private String webPageUrl;
 
-    @OneToMany
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Menu> menus;
 
     @ManyToMany
@@ -25,6 +25,13 @@ public class Company {
     public Company(String name, String webpage_url) {
         setName(name);
         setWebPageUrl(webpage_url);
+    }
+
+    public Company(String name, String webpage_url, List<Menu> menus, List<WeekDays> weekDays){
+        this.name = name;
+        this.webPageUrl = webpage_url;
+        this.menus = menus;
+        this.weekDays = weekDays;
     }
 
     public Long getId() {
