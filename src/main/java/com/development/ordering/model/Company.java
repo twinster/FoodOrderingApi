@@ -1,10 +1,16 @@
 package com.development.ordering.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "companies")
+@org.hibernate.annotations.Entity(
+        dynamicUpdate = true
+)
+@DynamicUpdate(true)
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +19,9 @@ public class Company {
     @Column(name = "webpage_url")
     private String webPageUrl;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "company", targetEntity = Menu.class)
     private List<Menu> menus;
 
     @ManyToMany

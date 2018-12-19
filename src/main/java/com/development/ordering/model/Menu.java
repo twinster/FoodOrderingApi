@@ -15,12 +15,12 @@ public class Menu {
     private String path;
     private Integer week_num;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Company.class)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private Company company;
     @ManyToOne
-    @JoinColumn(name = "week_day_id")
+    @JoinColumn(name = "week_day_id", referencedColumnName = "id")
     private WeekDays weekDays;
 
     public Menu() {

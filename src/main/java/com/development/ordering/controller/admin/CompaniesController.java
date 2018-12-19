@@ -40,7 +40,7 @@ public class CompaniesController {
     }
 
     //@PreAuthorize("hasRole('Jemali')")
-    @RequestMapping(method=RequestMethod.PUT, value="/{id}")
+    @RequestMapping(method=RequestMethod.PATCH, value="/{id}")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company, @PathVariable(value = "id") long id) {
         return  ResponseEntity.ok().body(companyService.addOrUpdateCompany(company));
     }

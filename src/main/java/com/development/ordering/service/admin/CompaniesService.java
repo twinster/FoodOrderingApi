@@ -1,7 +1,9 @@
 package com.development.ordering.service.admin;
 
 import com.development.ordering.model.Company;
+import com.development.ordering.model.Menu;
 import com.development.ordering.repository.CompanyRepository;
+import com.development.ordering.repository.MenuRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.List;
 public class CompaniesService {
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private MenuRepository menuRepository;
 
     public List<Company> getAllCompanies() {
 
@@ -33,6 +38,11 @@ public class CompaniesService {
     }
 
     public Company addOrUpdateCompany(Company company) {
+        List<Menu> menus = company.getMenus();
+        for (Menu menu : menus) {
+            menu.setCompany(company);
+        }
+        company.setMenus(menus);
         return companyRepository.save(company);
     }
 
