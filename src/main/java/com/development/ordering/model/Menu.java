@@ -23,6 +23,9 @@ public class Menu {
     @JoinColumn(name = "week_day_id", referencedColumnName = "id")
     private WeekDays weekDays;
 
+    @OneToMany
+    private List<OrderDetails> orderDetails;
+
     public Menu() {
     }
 

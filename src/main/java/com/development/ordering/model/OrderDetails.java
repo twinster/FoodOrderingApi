@@ -12,6 +12,10 @@ public class OrderDetails {
     private String order_text;
     private Date updated_at;
 
+    @ManyToOne
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
@@ -21,7 +25,7 @@ public class OrderDetails {
     private OrderStatus orderStatus;
 
     @ManyToOne
-    @JoinColumn(name = "confirmer_id", nullable = false)
+    @JoinColumn(name = "confirmer_id")
     private User confirmer;
 
     public OrderDetails() {}

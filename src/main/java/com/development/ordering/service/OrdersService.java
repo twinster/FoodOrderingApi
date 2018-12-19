@@ -4,6 +4,7 @@ import com.development.ordering.model.Company;
 import com.development.ordering.model.Order;
 import com.development.ordering.model.OrderDetails;
 import com.development.ordering.repository.OrderRepository;
+import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,6 @@ public class OrdersService {
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         orderRepository.findAll().forEach(orders::add);
-//        orderRepository.findAll().forEach(order -> {
-//            order.setOrderDetails(order.getOrderDetails());
-//            orders.add(order);
-//        });
         return orders;
     }
     
