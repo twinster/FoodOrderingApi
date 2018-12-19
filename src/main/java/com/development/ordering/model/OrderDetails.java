@@ -12,9 +12,9 @@ public class OrderDetails {
     private String order_text;
     private Date updated_at;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private Company company;
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "order_status_id", nullable = false)
@@ -61,5 +61,13 @@ public class OrderDetails {
 
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

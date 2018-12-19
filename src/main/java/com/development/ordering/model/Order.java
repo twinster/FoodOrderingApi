@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderDetails> orderDetails;
 
     public Order() {}
@@ -53,5 +53,13 @@ public class Order {
 
     public void setWeek_number(Integer week_number) {
         this.week_num = week_num;
+    }
+
+    public List<OrderDetails> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetails> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

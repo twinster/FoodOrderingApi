@@ -19,8 +19,8 @@ public class WeekDays {
 //    @OneToMany
 //    public List<OrderDetails> orderDetails;
 
-    @ManyToMany(mappedBy="weekDays")
-    private List<Company> companies;
+//    @ManyToMany(mappedBy="weekDays")
+//    private List<Company> companies;
 
     public WeekDays(){}
 

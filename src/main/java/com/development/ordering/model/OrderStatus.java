@@ -13,9 +13,6 @@ public class OrderStatus {
     @Column(unique = true)
     private String englishName;
 
-    @OneToMany
-    public List<OrderDetails> orderDetails;
-
     OrderStatus(){}
 
     public OrderStatus(String name, String englishName) {
