@@ -1,8 +1,7 @@
 package com.development.ordering.controller.admin;
 
-import com.development.ordering.model.Company;
 import com.development.ordering.model.Menu;
-import com.development.ordering.service.MenuService;
+import com.development.ordering.service.admin.MenuService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

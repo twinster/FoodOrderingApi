@@ -1,7 +1,11 @@
 package com.development.ordering.config;
 
+import com.development.ordering.model.OrderStatus;
 import com.development.ordering.model.User;
 import com.development.ordering.model.UserRole;
+import com.development.ordering.model.WeekDays;
+import com.development.ordering.repository.OrderStatusRepository;
+import com.development.ordering.repository.WeekDaysRepository;
 import com.development.ordering.service.UserRoleService;
 import com.development.ordering.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,12 @@ public class InitData {
     private UserRoleService userRoleService;
 
     @Autowired
+    private OrderStatusRepository orderStatusRepository;
+
+    @Autowired
+    private WeekDaysRepository weekDaysRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
@@ -27,6 +37,14 @@ public class InitData {
     @Bean
     public boolean insertTestData(){
         try{
+            weekDaysRepository.save(new WeekDays("Monday", "Monday"));
+            weekDaysRepository.save(new WeekDays("Tuesday", "Tuesday"));
+            weekDaysRepository.save(new WeekDays("Wednesday", "Wednesday"));
+            weekDaysRepository.save(new WeekDays("Thursday", "Thursday"));
+            weekDaysRepository.save(new WeekDays("Friday", "Friday"));
+            orderStatusRepository.save(new OrderStatus("Pending", "Pending"));
+            orderStatusRepository.save(new OrderStatus("Confirmed", "Confirmed"));
+            orderStatusRepository.save(new OrderStatus("Cancelled", "Cancelled"));
             userRoleService.addOrUpdateUserRole(new UserRole("ADMIN"));
             userRoleService.addOrUpdateUserRole(new UserRole("USER"));
             userService.save(new User("admin", "admin", "admin@gmail.com", "11211", "admin", "admin", userRoleService.getUserRoleByName("ADMIN")));

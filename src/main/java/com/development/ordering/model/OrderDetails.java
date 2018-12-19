@@ -54,4 +54,12 @@ public class OrderDetails {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

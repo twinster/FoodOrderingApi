@@ -1,12 +1,11 @@
 package com.development.ordering.controller.admin;
 
 import com.development.ordering.model.Company;
-import com.development.ordering.service.CompaniesService;
+import com.development.ordering.service.admin.CompaniesService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

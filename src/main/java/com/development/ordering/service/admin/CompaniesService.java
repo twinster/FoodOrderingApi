@@ -1,4 +1,4 @@
-package com.development.ordering.service;
+package com.development.ordering.service.admin;
 
 import com.development.ordering.model.Company;
 import com.development.ordering.repository.CompanyRepository;

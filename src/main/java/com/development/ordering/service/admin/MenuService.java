@@ -1,4 +1,4 @@
-package com.development.ordering.service;
+package com.development.ordering.service.admin;
 
 import com.development.ordering.model.Menu;
 import com.development.ordering.repository.MenuRepository;

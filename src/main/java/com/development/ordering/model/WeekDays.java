@@ -10,30 +10,43 @@ public class WeekDays {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String day;
+    @Column(unique = true)
     private String englishName;
 
-    @OneToMany
-    public List<Menu> menus;
+//    @OneToMany
+//    public List<Menu> menus;
 
-    @OneToMany
-    public List<OrderDetails> orderDetails;
+//    @OneToMany
+//    public List<OrderDetails> orderDetails;
 
     @ManyToMany(mappedBy="weekDays")
     private List<Company> companies;
 
     public WeekDays(){}
 
-    private WeekDays(String day, String englishName) {
+    public WeekDays(String day, String englishName) {
         this.day = day;
         this.englishName = englishName;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getWeekDay() {
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getDay() {
         return day;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
     }
 
     public String getEnglishName() {
