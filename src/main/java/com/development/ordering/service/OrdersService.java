@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
+import static com.development.ordering.model.Constants.CURRENT_AUTH;
 
 @Service
 public class OrdersService {

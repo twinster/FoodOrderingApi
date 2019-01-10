@@ -38,11 +38,11 @@ public class CompaniesService {
     }
 
     public Company addOrUpdateCompany(Company company) {
-        List<Menu> menus = company.getMenus();
-        for (Menu menu : menus) {
-            menu.setCompany(company);
-        }
-        company.setMenus(menus);
+//        List<Menu> menus = company.getMenus();
+//        for (Menu menu : menus) {
+//            menu.setCompany(company);
+//        }
+//        company.setMenus(menus);
         return companyRepository.save(company);
     }
 

@@ -1,5 +1,8 @@
 package com.development.ordering.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -17,14 +20,17 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = OrderDetails.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<OrderDetails> orderDetails;
 
     public Order() {}
 
-    public Order(Date order_date, Integer week_num) {
+    public Order(Date order_date, Integer week_num, User user, List<OrderDetails> orderDetails) {
         this.order_date = order_date;
         this.week_num = week_num;
+        this.user = user;
+        this.orderDetails = orderDetails;
     }
 
     public Long getId() {
@@ -57,5 +63,13 @@ public class Order {
 
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

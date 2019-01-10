@@ -36,7 +36,6 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
@@ -53,9 +52,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(user);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseEntity<?> logout(@RequestBody LoginUser loginUser) throws  AuthenticationException {
-
-        return ResponseEntity.ok(true);
-    }
+//    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+//    public ResponseEntity<?> logout(@RequestBody LoginUser loginUser) throws  AuthenticationException {
+//        return ResponseEntity.ok(true);
+//    }
 }

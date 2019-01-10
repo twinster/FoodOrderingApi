@@ -15,16 +15,17 @@ public class Menu {
     private String path;
     private Integer week_num;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Company.class)
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
     @ManyToOne
     @JoinColumn(name = "week_day_id", referencedColumnName = "id")
     private WeekDays weekDays;
 
-    @OneToMany
-    private List<OrderDetails> orderDetails;
+//    @OneToMany
+//    private List<OrderDetails> orderDetails;
 
     public Menu() {
     }

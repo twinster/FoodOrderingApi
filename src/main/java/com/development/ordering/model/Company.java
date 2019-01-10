@@ -20,7 +20,7 @@ public class Company {
     private String webPageUrl;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "company", targetEntity = Menu.class)
     private List<Menu> menus;
 
