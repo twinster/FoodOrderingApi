@@ -1,9 +1,14 @@
 package com.development.ordering.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,14 +20,19 @@ public class Menu {
     private String path;
     private Integer week_num;
 
-    @ManyToOne
+//    @Column(name = "company_id", nullable=false)
+//    private Long companyId;
+
+    //@JsonManagedReference
+    @JsonIgnoreProperties("menus")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToOne
-    @JoinColumn(name = "week_day_id", referencedColumnName = "id")
-    private WeekDays weekDays;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "week_day_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    private WeekDays weekDays;
 
 //    @OneToMany
 //    private List<OrderDetails> orderDetails;
@@ -67,12 +77,21 @@ public class Menu {
         this.company = company;
     }
 
-    public WeekDays getWeekDays() {
-        return weekDays;
-    }
+//    public Long getCompanyId() {
+//        return companyId;
+//    }
+//
+//    public void setCompanyId(Long companyId) {
+//        this.companyId = companyId;
+//    }
 
-    public void setWeekDays(WeekDays weekDays) {
-        this.weekDays = weekDays;
-    }
+
+//    public WeekDays getWeekDays() {
+//        return weekDays;
+//    }
+//
+//    public void setWeekDays(WeekDays weekDays) {
+//        this.weekDays = weekDays;
+//    }
 
 }

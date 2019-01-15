@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CompaniesService {
@@ -21,9 +24,7 @@ public class CompaniesService {
     private MenuRepository menuRepository;
 
     public List<Company> getAllCompanies() {
-
-        List<Company> companies = new ArrayList<>();
-        companyRepository.findAll().forEach(companies::add);
+        List<Company> companies = new ArrayList<>(companyRepository.findAll());
         return companies;
     }
 
@@ -38,11 +39,11 @@ public class CompaniesService {
     }
 
     public Company addOrUpdateCompany(Company company) {
-//        List<Menu> menus = company.getMenus();
-//        for (Menu menu : menus) {
-//            menu.setCompany(company);
-//        }
-//        company.setMenus(menus);
+        Set<Menu> menus = company.getMenus();
+        for (Menu menu : menus) {
+            menu.setCompany(company);
+        }
+        company.setMenus(menus);
         return companyRepository.save(company);
     }
 
