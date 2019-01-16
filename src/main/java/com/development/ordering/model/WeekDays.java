@@ -1,5 +1,7 @@
 package com.development.ordering.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,14 +15,18 @@ public class WeekDays {
     @Column(unique = true)
     private String englishName;
 
-//    @OneToMany
-//    public List<Menu> menus;
+    @OneToMany
+    public List<Menu> menus;
 
-//    @OneToMany
-//    public List<OrderDetails> orderDetails;
+    @OneToMany
+    public List<OrderDetails> orderDetails;
 
-//    @ManyToMany(mappedBy="weekDays")
-//    private List<Company> companies;
+    @JsonIgnoreProperties("weekDays")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.MERGE
+            }, mappedBy = "weekDays")
+    private List<Company> companies;
 
     public WeekDays(){}
 
@@ -51,5 +57,13 @@ public class WeekDays {
 
     public String getEnglishName() {
         return englishName;
+    }
+
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<Company> companies) {
+        this.companies = companies;
     }
 }

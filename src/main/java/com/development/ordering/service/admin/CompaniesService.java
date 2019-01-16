@@ -4,6 +4,7 @@ import com.development.ordering.model.Company;
 import com.development.ordering.model.Menu;
 import com.development.ordering.repository.CompanyRepository;
 import com.development.ordering.repository.MenuRepository;
+import com.development.ordering.repository.WeekDaysRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ import java.util.Set;
 public class CompaniesService {
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private WeekDaysRepository weekDaysRepository;
 
     @Autowired
     private MenuRepository menuRepository;
@@ -39,11 +43,13 @@ public class CompaniesService {
     }
 
     public Company addOrUpdateCompany(Company company) {
-        Set<Menu> menus = company.getMenus();
-        for (Menu menu : menus) {
-            menu.setCompany(company);
-        }
-        company.setMenus(menus);
+//        Set<Menu> menus = company.getMenus();
+//        if (menus != null){
+//            for (Menu menu : menus) {
+//                menu.setCompany(company);
+//            }
+//            company.setMenus(menus);
+//        }
         return companyRepository.save(company);
     }
 

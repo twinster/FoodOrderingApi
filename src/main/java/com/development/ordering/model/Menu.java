@@ -26,7 +26,7 @@ public class Menu {
     //@JsonManagedReference
     @JsonIgnoreProperties("menus")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 

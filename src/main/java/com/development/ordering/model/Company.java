@@ -1,14 +1,12 @@
 package com.development.ordering.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicUpdate;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,15 +26,36 @@ public class Company {
     //@JoinColumn(name = "company_id", nullable=false)
     private Set<Menu> menus;
 
-    @ManyToMany
+    @JsonIgnoreProperties("company")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.MERGE)
+    @JoinTable(name = "companies_week_days",
+            joinColumns = { @JoinColumn(name = "company_id") },
+            inverseJoinColumns = { @JoinColumn(name = "week_days_id") })
     private List<WeekDays> weekDays;
+
+    @PrePersist
+    public void prePersist(){
+        if (menus != null) menus.forEach(menu -> menu.setCompany(this));
+//        if (weekDays != null) weekDays.forEach(weekDay -> {
+//            if (weekDay.getCompanies() == null){
+//                List<Company> comps = new ArrayList<>();
+//                comps.add(this);
+//                weekDay.setCompanies(comps);
+//            }
+//            else
+//                weekDay.getCompanies().add(this);
+//        });
+
+        String a = "a";
+    }
 
     public Company() {
     }
 
     public Company(String name, String webpage_url) {
-        setName(name);
-        setWebPageUrl(webpage_url);
+        this.name = name;
+        this.webPageUrl = webpage_url;
     }
 
     public Company(String name, String webpage_url, Set<Menu> menus, List<WeekDays> weekDays){
@@ -76,5 +95,13 @@ public class Company {
 
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
+    }
+
+    public List<WeekDays> getWeekDays() {
+        return weekDays;
+    }
+
+    public void setWeekDays(List<WeekDays> weekDays) {
+        this.weekDays = weekDays;
     }
 }
