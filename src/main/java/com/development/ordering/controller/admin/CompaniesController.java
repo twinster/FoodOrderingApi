@@ -37,7 +37,7 @@ public class CompaniesController {
         return companyService.getCompany(id);
     }
 
-    @RequestMapping(method=RequestMethod.PATCH, value="/{id}")
+    @RequestMapping(method=RequestMethod.PUT, value="/{id}")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company, @PathVariable(value = "id") long id) {
         return  ResponseEntity.ok().body(companyService.addOrUpdateCompany(company));
     }
