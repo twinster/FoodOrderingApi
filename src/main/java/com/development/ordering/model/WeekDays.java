@@ -15,18 +15,15 @@ public class WeekDays {
     @Column(unique = true)
     private String englishName;
 
-    @OneToMany
-    public List<Menu> menus;
-
-    @OneToMany
-    public List<OrderDetails> orderDetails;
-
-    @JsonIgnoreProperties("weekDays")
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.MERGE
-            }, mappedBy = "weekDays")
-    private List<Company> companies;
+//    @OneToMany
+//    public List<Menu> menus;
+//
+//    @OneToMany
+//    public List<OrderDetails> orderDetails;
+//
+//    @JsonIgnoreProperties("weekDays")
+//    @ManyToMany(cascade = {CascadeType.MERGE})
+//    private List<Company> companies;
 
     public WeekDays(){}
 
@@ -59,11 +56,11 @@ public class WeekDays {
         return englishName;
     }
 
-    public List<Company> getCompanies() {
-        return companies;
-    }
-
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
-    }
+//    public List<Company> getCompanies() {
+//        return companies;
+//    }
+//
+//    public void setCompanies(List<Company> companies) {
+//        this.companies = companies;
+//    }
 }

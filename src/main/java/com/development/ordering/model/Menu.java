@@ -7,8 +7,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.annotation.PreDestroy;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -17,28 +20,26 @@ public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String path;
+
     private Integer week_num;
 
-//    @Column(name = "company_id", nullable=false)
-//    private Long companyId;
+    @Column(nullable = false, unique=true)
+    private Date validFrom;
+
+    @Column(nullable = false, unique=true)
+    private Date validTo;
 
     //@JsonManagedReference
     @JsonIgnoreProperties("menus")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    //@OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "week_day_id", referencedColumnName = "id", insertable = false, updatable = false)
-//    private WeekDays weekDays;
-
-//    @OneToMany
-//    private List<OrderDetails> orderDetails;
-
-    public Menu() {
-    }
+    public Menu() { }
 
     public Menu(String path, Integer week_num, Long company_id) {
         this.setPath(path);
@@ -77,21 +78,31 @@ public class Menu {
         this.company = company;
     }
 
-//    public Long getCompanyId() {
-//        return companyId;
-//    }
-//
-//    public void setCompanyId(Long companyId) {
-//        this.companyId = companyId;
-//    }
+    public Date getValidTo() {
+        return validTo;
+    }
 
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
+    }
 
-//    public WeekDays getWeekDays() {
-//        return weekDays;
-//    }
-//
-//    public void setWeekDays(WeekDays weekDays) {
-//        this.weekDays = weekDays;
-//    }
+    public Date getValidFrom() {
+        return validFrom;
+    }
 
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
+    }
+
+    @PrePersist
+    public void prePersist() throws Exception {
+        if (this.validTo.toLocalDate().toEpochDay() - this.validFrom.toLocalDate().toEpochDay() != 4
+                || !this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
+            throw new Exception("Wrong Dates");
+    }
+
+    @PreRemove
+    public void preDestroy(){
+        String a = "5";
+    }
 }

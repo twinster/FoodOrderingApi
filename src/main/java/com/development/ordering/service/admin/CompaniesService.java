@@ -43,13 +43,6 @@ public class CompaniesService {
     }
 
     public Company addOrUpdateCompany(Company company) {
-//        Set<Menu> menus = company.getMenus();
-//        if (menus != null){
-//            for (Menu menu : menus) {
-//                menu.setCompany(company);
-//            }
-//            company.setMenus(menus);
-//        }
         return companyRepository.save(company);
     }
 
@@ -58,7 +51,7 @@ public class CompaniesService {
             companyRepository.deleteById(id);
             return true;
         }catch (Exception e){
-            throw new ResourceNotFoundException("Company not found with id :: " + id);
+            throw e;
         }
     }
 }

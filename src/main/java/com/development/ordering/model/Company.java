@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,12 +18,15 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
     @Column(name = "webpage_url")
     private String webPageUrl;
 
     @JsonIgnoreProperties("company")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "company")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "company", orphanRemoval=true)
     //@JoinColumn(name = "company_id", nullable=false)
     private Set<Menu> menus;
 
@@ -37,17 +41,6 @@ public class Company {
     @PrePersist
     public void prePersist(){
         if (menus != null) menus.forEach(menu -> menu.setCompany(this));
-//        if (weekDays != null) weekDays.forEach(weekDay -> {
-//            if (weekDay.getCompanies() == null){
-//                List<Company> comps = new ArrayList<>();
-//                comps.add(this);
-//                weekDay.setCompanies(comps);
-//            }
-//            else
-//                weekDay.getCompanies().add(this);
-//        });
-
-        String a = "a";
     }
 
     public Company() {

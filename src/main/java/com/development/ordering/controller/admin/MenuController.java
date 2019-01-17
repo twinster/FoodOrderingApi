@@ -4,6 +4,7 @@ import com.development.ordering.model.Menu;
 import com.development.ordering.service.admin.MenuService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,14 +35,13 @@ public class MenuController {
     }
 
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
-    public ResponseEntity<Menu> updateMenu(@RequestBody Menu menu, @PathVariable(value = "id") long id) {
+    public ResponseEntity<Menu> updateMenu(@RequestBody Menu menu, @PathVariable Long id) {
         return  ResponseEntity.ok().body(menuService.addOrUpdateMenu(menu));
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value="/{id}")
     public ResponseEntity<?> deleteMenu(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
-        menuService.deleteMenu(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(menuService.deleteMenu(id));
     }
 
 
