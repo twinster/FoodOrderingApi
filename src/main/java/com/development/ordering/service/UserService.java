@@ -58,10 +58,13 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public User save(User user) throws Exception {
+    public User adminSave(User user) throws Exception {
         String password = user.getPassword();
         if (user.getPassword() != null){
             user.setPassword(bCryptPasswordEncoder.encode(password));
+        }
+        else{
+            user.setPassword(bCryptPasswordEncoder.encode("123qwe"));
         }
 
         if (user.getUserRole() == null){
@@ -74,7 +77,5 @@ public class UserService {
         catch (Exception e){
             throw e;
         }
-
-
     }
 }

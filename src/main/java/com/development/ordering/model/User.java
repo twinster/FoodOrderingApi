@@ -13,14 +13,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String position;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     private String phone_number;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
     //@JsonIgnore
+    @Column(nullable = false)
     private String password;
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
@@ -30,9 +32,6 @@ public class User {
 
     @OneToMany
     private List<Order> orders;
-
-    @OneToMany
-    private List<Order> confirmedOrders; //??
 
     public User(){}
 

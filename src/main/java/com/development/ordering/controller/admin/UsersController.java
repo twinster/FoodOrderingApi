@@ -31,12 +31,12 @@ public class UsersController {
 
     @RequestMapping(value="/", method = RequestMethod.POST)
     public User saveUser(@RequestBody User user) throws Exception{
-        return userService.save(user);
+        return userService.adminSave(user);
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
     public User saveUser(@RequestBody User user, @PathVariable(value = "id") Long id) throws Exception{
-        return userService.save(user);
+        return userService.adminSave(user);
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value="/{id}")

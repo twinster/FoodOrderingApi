@@ -9,7 +9,7 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany
@@ -37,5 +37,4 @@ public class UserRole {
     public void setName(String name) {
         this.name = name;
     }
-
 }
