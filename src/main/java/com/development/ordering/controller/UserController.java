@@ -27,6 +27,6 @@ public class UserController {
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
     public User saveUser(@RequestBody User user, @PathVariable(value = "id") Long id) throws Exception{
-        return userService.adminSave(user);
+        return userService.userSave(user);
     }
 }

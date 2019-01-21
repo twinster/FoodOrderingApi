@@ -1,6 +1,7 @@
 package com.development.ordering.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -105,10 +106,12 @@ public class User {
         this.username = user_name;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

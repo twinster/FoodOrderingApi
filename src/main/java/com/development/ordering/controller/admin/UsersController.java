@@ -31,21 +31,15 @@ public class UsersController {
 
     @RequestMapping(value="/", method = RequestMethod.POST)
     public User saveUser(@RequestBody User user) throws Exception{
-        return userService.adminSave(user);
+        return userService.userCreate(user);
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
     public User saveUser(@RequestBody User user, @PathVariable(value = "id") Long id) throws Exception{
-        return userService.adminSave(user);
+        return userService.userSave(user);
     }
 
-    @RequestMapping(method=RequestMethod.DELETE, value="/{id}")
-    public ResponseEntity<?> deleteCompany(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
-        userService.delete(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @RequestMapping(value="/user/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public boolean deleteUser(@PathVariable(value = "id") Long id){
         try {
             userService.delete(id);

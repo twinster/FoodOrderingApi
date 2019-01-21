@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +17,9 @@ public class UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserRoleRepository userRoleRepository;
+
+
+    //admin services
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -58,19 +60,21 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public User adminSave(User user) throws Exception {
-        String password = user.getPassword();
-        if (user.getPassword() != null){
-            user.setPassword(bCryptPasswordEncoder.encode(password));
-        }
-        else{
-            user.setPassword(bCryptPasswordEncoder.encode("123qwe"));
-        }
-
+    public User userCreate(User user) throws Exception {
+        user.setPassword(bCryptPasswordEncoder.encode("123qwe"));
         if (user.getUserRole() == null){
             user.setUserRole(userRoleRepository.findByName("USER"));
         }
+        try{
+            return userRepository.save(user);
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
 
+    //user services
+    public User userSave(User user) throws Exception {
         try{
             return userRepository.save(user);
         }
