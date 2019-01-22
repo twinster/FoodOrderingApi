@@ -1,12 +1,18 @@
 package com.development.ordering.service;
 
+import com.development.ordering.OrderingApplication;
 import com.development.ordering.model.User;
+import com.development.ordering.model.UserDto;
 import com.development.ordering.repository.UserRepository;
 import com.development.ordering.repository.UserRoleRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +24,8 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserRoleRepository userRoleRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     //admin services
 
@@ -38,8 +46,8 @@ public class UserService {
         return users;
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public User getUserById(Long id) {
+        return userRepository.findUserById(id);
     }
 
     public User getUserByUsername(String username) {
@@ -81,5 +89,29 @@ public class UserService {
         catch (Exception e){
             throw e;
         }
+    }
+
+    public UserDto convertToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    public User convertToEntity(UserDto userDto) throws Exception {
+        User user = modelMapper.map(userDto, User.class);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (userDto.getId() != null) {
+            User oldUser = getUserById(userDto.getId());
+            user.setPassword(oldUser.getPassword());
+            user.setId(oldUser.getId());
+            if (user.getUserRole() == null){
+                user.setUserRole(oldUser.getUserRole());
+            }
+
+            if (user.getUserRole() != null && auth.getAuthorities().toArray()[0] != "ADMIN"){
+                throw new Exception("You have no permission, good bye :))");
+            }
+        }
+        return user;
     }
 }

@@ -1,7 +1,7 @@
 package com.development.ordering.controller;
 
-
 import com.development.ordering.model.User;
+import com.development.ordering.model.UserDto;
 import com.development.ordering.service.UserDetailServiceImpl;
 import com.development.ordering.service.UserService;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -26,7 +26,8 @@ public class UserController {
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
-    public User saveUser(@RequestBody User user, @PathVariable(value = "id") Long id) throws Exception{
+    public User saveUser(@RequestBody UserDto userDto, @PathVariable(value = "id") Long id) throws Exception{
+        User user = userService.convertToEntity(userDto);
         return userService.userSave(user);
     }
 }
