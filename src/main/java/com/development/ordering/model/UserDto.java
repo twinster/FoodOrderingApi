@@ -20,7 +20,7 @@ public class UserDto {
 
     public UserDto(){}
 
-    public UserDto(String name, String position, String email, String phone_number, String username, String password) {
+    public UserDto(String name, String position, String email, String phone_number, String username) {
         super();
         this.name = name;
 
@@ -30,7 +30,7 @@ public class UserDto {
         this.username = username;
     }
 
-    public UserDto(String name, String position, String email, String phone_number, String username, String password, UserRole userRole) {
+    public UserDto(String name, String position, String email, String phone_number, String username, UserRole userRole) {
         super();
         this.name = name;
         this.position = position;

@@ -28,28 +28,23 @@ import java.util.List;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenProvider jwtTokenUtil;
-
-    @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
-         final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginUser.getUsername(),
-                        loginUser.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = jwtTokenUtil.generateToken(authentication);
-        User user = userService.getUserByUsername(loginUser.getUsername());
-        user.setToken(token);
-        return ResponseEntity.ok(user);
+//         final Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        loginUser.getUsername(),
+//                        loginUser.getPassword()
+//                )
+//         );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        final String token = jwtTokenUtil.generateToken(authentication);
+//        User user = userService.getUserByUsername(loginUser.getUsername());
+//        user.setToken(token);
+
+        return ResponseEntity.ok(userService.login(loginUser));
     }
 
 //    @RequestMapping(value = "/logout", method = RequestMethod.POST)

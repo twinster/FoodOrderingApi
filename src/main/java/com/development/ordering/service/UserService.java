@@ -1,14 +1,23 @@
 package com.development.ordering.service;
 
+import com.development.ordering.Globals;
 import com.development.ordering.OrderingApplication;
+import com.development.ordering.config.TokenProvider;
+import com.development.ordering.model.LoginUser;
 import com.development.ordering.model.User;
 import com.development.ordering.model.UserDto;
 import com.development.ordering.repository.UserRepository;
 import com.development.ordering.repository.UserRoleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +35,17 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private Globals globals;
+
+    private User loggedUser;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private TokenProvider jwtTokenUtil;
 
     //admin services
 
@@ -64,9 +84,13 @@ public class UserService {
         userRepository.removeById(id);
     }
 
-    public User findById(Long id) {
-        return userRepository.findUserById(id);
+    public void deleteUser(long id){
+        userRepository.deleteUserById(id);
     }
+
+//    public User findById(Long id) {
+//        return userRepository.findUserById(id);
+//    }
 
     public User userCreate(User user) throws Exception {
         user.setPassword(bCryptPasswordEncoder.encode("123qwe"));
@@ -79,6 +103,7 @@ public class UserService {
         catch (Exception e){
             throw e;
         }
+
     }
 
     //user services
@@ -91,27 +116,61 @@ public class UserService {
         }
     }
 
+    public User changePassword(String oldPassword, String newPassword, Long id) throws Exception {
+        loggedUser = globals.getCurrentUser();
+        if (!loggedUser.getId().equals(id))
+            throw new Exception("You have no permission, good bye :))");
+        if (!this.bCryptPasswordEncoder.matches(oldPassword, loggedUser.getPassword()))
+            throw new Exception("current password is invalid");
+        loggedUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(loggedUser);
+
+        return login(new LoginUser(loggedUser.getUsername(), newPassword));
+    }
+
+    public User login(LoginUser loginUser) {
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginUser.getUsername(),
+                        loginUser.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtTokenUtil.generateToken(authentication);
+        User user = getUserByUsername(loginUser.getUsername());
+        user.setToken(token);
+        return user;
+    }
+
     public UserDto convertToDto(User user) {
         return modelMapper.map(user, UserDto.class);
     }
 
     public User convertToEntity(UserDto userDto) throws Exception {
         User user = modelMapper.map(userDto, User.class);
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        loggedUser = globals.getCurrentUser();
 
         if (userDto.getId() != null) {
             User oldUser = getUserById(userDto.getId());
+            //BeanUtils.copyProperties(userDto, oldUser, "password", "userRole");  //other way
             user.setPassword(oldUser.getPassword());
             user.setId(oldUser.getId());
-            if (user.getUserRole() == null){
+            if (userDto.getUserRole() == null){
                 user.setUserRole(oldUser.getUserRole());
             }
 
-            if (user.getUserRole() != null && auth.getAuthorities().toArray()[0] != "ADMIN"){
+            if (validateUserPermission(userDto) || validateAdminPermission(oldUser))
                 throw new Exception("You have no permission, good bye :))");
-            }
+
         }
         return user;
+    }
+
+    private boolean validateUserPermission(UserDto userDto){
+        return !loggedUser.getUserRole().getName().equals("ADMIN") && (userDto.getUserRole() != null || !loggedUser.getId().equals(userDto.getId()));
+    }
+
+    private boolean validateAdminPermission(User oldUser){
+        return loggedUser.getUserRole().getName().equals("ADMIN") && oldUser.getUserRole().getName().equals("ADMIN");
     }
 }

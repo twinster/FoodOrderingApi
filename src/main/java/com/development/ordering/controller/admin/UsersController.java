@@ -5,6 +5,7 @@ import com.development.ordering.model.UserDto;
 import com.development.ordering.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/users")
 @PreAuthorize("hasAuthority('ADMIN')")
+@Transactional
 public class UsersController {
 
     @Autowired
@@ -25,7 +27,7 @@ public class UsersController {
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
     public UserDto getOne(@PathVariable(value = "id") Long id){
-        return userService.convertToDto(userService.findById(id));
+        return userService.convertToDto(userService.getUserById(id));
     }
 
     @RequestMapping(value="/", method = RequestMethod.POST)
@@ -35,17 +37,21 @@ public class UsersController {
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
     public User updateUser(@RequestBody UserDto userDto, @PathVariable(value = "id") Long id) throws Exception{
-        User user = userService.convertToEntity(userDto);
-        return userService.userSave(user);
+        try {
+            User user = userService.convertToEntity(userDto);
+            return userService.userSave(user);
+        }catch (NullPointerException e){
+            throw new NullPointerException("Not Found Object");
+        }
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public boolean deleteUser(@PathVariable(value = "id") Long id){
         try {
-            userService.delete(id);
+            userService.deleteUser(id);
             return true;
         }catch (Exception e){
-            return false;
+            throw e;
         }
     }
 }

@@ -27,4 +27,5 @@ public class OrderingApplication  {
 //        String userName = ((User) ((UsernamePasswordAuthenticationToken) auth).getPrincipal()).getUsername();
 //        return (User) userDetailService.loadUserByUsername(userName);
 //    }
+
 }

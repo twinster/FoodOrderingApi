@@ -7,6 +7,11 @@ public class LoginUser {
     private String role;
     private AuthToken token;
 
+    public LoginUser(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
