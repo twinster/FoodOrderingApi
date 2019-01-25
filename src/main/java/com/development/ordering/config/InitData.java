@@ -47,8 +47,8 @@ public class InitData {
             orderStatusRepository.save(new OrderStatus("Cancelled", "Cancelled"));
             userRoleService.addOrUpdateUserRole(new UserRole("ADMIN"));
             userRoleService.addOrUpdateUserRole(new UserRole("USER"));
-            userService.userSave(new User("admin", "admin", "admin@gmail.com", "11211", "admin", "admin", userRoleService.getUserRoleByName("ADMIN")));
-            userService.userSave(new User("user", "user", "user@gmail.com", "11211", "user","admin", userRoleService.getUserRoleByName("USER")));
+            userService.userSave(new User("admin", bCryptPasswordEncoder.encode("admin"), "admin@gmail.com", "11211", "admin", "admin", userRoleService.getUserRoleByName("ADMIN")));
+            userService.userSave(new User("user", bCryptPasswordEncoder.encode("user"), "user@gmail.com", "11211", "user","admin", userRoleService.getUserRoleByName("USER")));
             return true;
         }
         catch (Exception e){
