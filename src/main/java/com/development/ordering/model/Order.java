@@ -13,8 +13,15 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date order_date;
-    private Integer week_num;
+
+    @Column(nullable = false, name = "order_date")
+    private Date orderDate;
+
+    @Column(nullable = false, unique=true)
+    private Date validFrom;
+
+    @Column(nullable = false, unique=true)
+    private Date validTo;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -26,9 +33,8 @@ public class Order {
 
     public Order() {}
 
-    public Order(Date order_date, Integer week_num, User user, List<OrderDetails> orderDetails) {
-        this.order_date = order_date;
-        this.week_num = week_num;
+    public Order(Date orderDate, Integer week_num, User user, List<OrderDetails> orderDetails) {
+        this.orderDate = orderDate;
         this.user = user;
         this.orderDetails = orderDetails;
     }
@@ -41,20 +47,12 @@ public class Order {
         this.id = id;
     }
 
-    public Date getOrder_date() {
-        return order_date;
+    public Date getOrderDate() {
+        return orderDate;
     }
 
-    public void setOrder_date(Date order_date) {
-        this.order_date = order_date;
-    }
-
-    public Integer getWeek_number() {
-        return week_num;
-    }
-
-    public void setWeek_number(Integer week_number) {
-        this.week_num = week_num;
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 
     public List<OrderDetails> getOrderDetails() {
@@ -71,5 +69,21 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getValidFrom() {
+        return validFrom;
+    }
+
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
+    }
+
+    public Date getValidTo() {
+        return validTo;
+    }
+
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
     }
 }

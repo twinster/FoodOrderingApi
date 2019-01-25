@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,24 +20,23 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
-    @RequestMapping(method= RequestMethod.GET, value="/list")
-    public List<Order> getAllOrders() {
-        return ordersService.getAllOrders();
-    }
+//todo delete we dont need orders list
+//    @RequestMapping(method= RequestMethod.GET, value="/list")
+//    public List<Order> getAllOrders() {
+//        return ordersService.getAllOrders();
+//    }
 
-    //@Secured("USER")
+
     @RequestMapping(method=RequestMethod.POST, value="/")
     public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
         return ResponseEntity.ok().body(ordersService.addOrUpdateOrder(order));
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN', 'USER', 'Jemali')")
-    @RequestMapping(method=RequestMethod.GET, value="/{id}/edit")
-    public Order getOrder(@PathVariable long id) throws ResourceNotFoundException {
-        return ordersService.getOrder(id);
+    @RequestMapping(method=RequestMethod.GET, value="/edit")
+    public Order getOrder(@RequestParam String week, @RequestParam long id) throws ResourceNotFoundException {
+        return ordersService.getOrder(week, id);
     }
 
-    //@PreAuthorize("hasRole('Jemali')")
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
     public ResponseEntity<Order> updateOrder(@Valid @RequestBody Order order, @PathVariable(value = "id") long id) {
         return  ResponseEntity.ok().body(ordersService.addOrUpdateOrder(order));

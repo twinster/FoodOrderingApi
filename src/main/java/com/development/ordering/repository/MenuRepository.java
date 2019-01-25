@@ -5,6 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MenuRepository extends CrudRepository<Menu, Long> {
     public Menu findMenuById(Long id);
-
-    public void deleteMenuById(long id);
+    public int deleteMenuById(long id);
 }

@@ -34,7 +34,7 @@ public class Menu {
 
     //@JsonManagedReference
     @JsonIgnoreProperties("menus")
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
@@ -96,13 +96,10 @@ public class Menu {
 
     @PrePersist
     public void prePersist() throws Exception {
-        if (this.validTo.toLocalDate().toEpochDay() - this.validFrom.toLocalDate().toEpochDay() != 4
-                || !this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
-            throw new Exception("Wrong Dates");
-    }
 
-    @PreRemove
-    public void preDestroy(){
-        String a = "5";
+        //this.validTo.toLocalDate().toEpochDay() - this.validFrom.toLocalDate().toEpochDay() != 4
+
+        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
+            throw new Exception("Wrong Dates");
     }
 }

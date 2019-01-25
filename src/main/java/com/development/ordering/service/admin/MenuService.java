@@ -5,6 +5,7 @@ import com.development.ordering.repository.MenuRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -45,7 +46,7 @@ public class MenuService {
         return menuRepository.save(menu);
     }
 
-    public boolean deleteMenu(long id) throws ResourceNotFoundException {
+    public boolean deleteMenu(long id){
         try{
             menuRepository.deleteMenuById(id);
             return true;

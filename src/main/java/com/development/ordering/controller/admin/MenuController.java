@@ -40,7 +40,7 @@ public class MenuController {
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value="/{id}")
-    public ResponseEntity<?> deleteMenu(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
+    public ResponseEntity<?> deleteMenu(@PathVariable(value = "id") long id) {
         return ResponseEntity.ok(menuService.deleteMenu(id));
     }
 
