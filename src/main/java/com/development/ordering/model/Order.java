@@ -27,13 +27,12 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = OrderDetails.class)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetails> orderDetails;
 
     public Order() {}
 
-    public Order(Date orderDate, Integer week_num, User user, List<OrderDetails> orderDetails) {
+    public Order(Date orderDate, User user, List<OrderDetails> orderDetails) {
         this.orderDate = orderDate;
         this.user = user;
         this.orderDetails = orderDetails;
@@ -85,5 +84,12 @@ public class Order {
 
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
+    }
+
+    @PrePersist
+    public void prePersist() throws Exception {
+        if (orderDetails != null) orderDetails.forEach(orderDetail -> orderDetail.setOrder(this));
+        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
+            throw new Exception("Wrong Dates");
     }
 }

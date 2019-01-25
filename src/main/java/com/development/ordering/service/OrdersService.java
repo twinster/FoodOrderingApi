@@ -25,18 +25,14 @@ public class OrdersService {
 
     private User loggedUser;
 
-    public List<Order> getAllOrders() {
-        List<Order> orders = new ArrayList<>();
-        orderRepository.findAll().forEach(orders::add);
-        return orders;
-    }
+//todo we dont need orders list
+//    public List<Order> getAllOrders() {
+//        List<Order> orders = new ArrayList<>();
+//        orderRepository.findAll().forEach(orders::add);
+//        return orders;
+//    }
     
     public Order addOrUpdateOrder(Order order) {
-        List<OrderDetails> orderDetails = order.getOrderDetails();
-        orderDetails.forEach(orderDetail -> {
-            orderDetail.setOrder(order);
-        });
-        order.setOrderDetails(orderDetails);
         return orderRepository.save(order);
     }
 
