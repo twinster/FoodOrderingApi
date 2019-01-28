@@ -25,7 +25,7 @@ public class Company {
     @Column(name = "webpage_url")
     private String webPageUrl;
 
-    @JsonIgnoreProperties("company")
+    //@JsonIgnoreProperties("company")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "company", orphanRemoval=true)
     //@JoinColumn(name = "company_id", nullable=false)
     private Set<Menu> menus;

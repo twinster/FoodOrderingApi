@@ -39,13 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-//        Enumeration headerNames = req.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String key = (String) headerNames.nextElement();
-//            String value = req.getHeader(key);
-//
-//        }
-//
         Map<String, String> map = new HashMap<String, String>();
 
         Enumeration headerNames = req.getHeaderNames();
@@ -55,27 +48,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             map.put(key, value);
         }
 
-
-
         String header = req.getHeader(HEADER_STRING);
         String username = null;
         String authToken = null;
-
-
 
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             authToken = header.replace(TOKEN_PREFIX, "");
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
+                logger.error("Wrong username", e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                logger.warn("token is expired", e);
             } catch(SignatureException e){
-                logger.error("Authentication Failed. Username or Password not valid.");
+                logger.error("invalid credentials.");
             }
         } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
+            logger.warn("Header is empty");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
