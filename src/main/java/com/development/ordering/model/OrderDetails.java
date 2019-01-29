@@ -1,7 +1,16 @@
 package com.development.ordering.model;
 
+import com.development.ordering.repository.OrderStatusRepository;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="order_details")
@@ -9,15 +18,23 @@ public class OrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String order_text;
-    private Date updated_at;
+    private String orderText;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable=false)
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "menu_id")
+    @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
+    @JsonIgnoreProperties("orderDetails")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Order order;
 
     @ManyToOne
@@ -28,12 +45,11 @@ public class OrderDetails {
     @JoinColumn(name = "confirmer_id")
     private User confirmer;
 
-    public OrderDetails() {}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "week_day_id", nullable = false)
+    private WeekDays weekDay;
 
-    public OrderDetails(String order_text, Date updated_at) {
-        this.order_text = order_text;
-        this.updated_at = updated_at;
-    }
+    public OrderDetails() {}
 
     public Long getId() {
         return id;
@@ -43,20 +59,12 @@ public class OrderDetails {
         this.id = id;
     }
 
-    public String getOrder_text() {
-        return order_text;
+    public String getOrderText() {
+        return orderText;
     }
 
-    public void setOrder_text(String order_text) {
-        this.order_text = order_text;
-    }
-
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
+    public void setOrderText(String orderText) {
+        this.orderText = orderText;
     }
 
     public OrderStatus getOrderStatus() {
@@ -73,5 +81,51 @@ public class OrderDetails {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public User getConfirmer() {
+        return confirmer;
+    }
+
+    public void setConfirmer(User confirmer) {
+        this.confirmer = confirmer;
+    }
+
+    public WeekDays getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(WeekDays weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    @PreUpdate
+    private void preUpdate() throws Exception {
+        if (this.getOrderStatus().getEnglishName().equals("Confirmed"))
+            throw new Exception("Cant change order for this day, order is already confirmed");
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

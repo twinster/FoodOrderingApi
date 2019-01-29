@@ -13,6 +13,7 @@ public class UserRole {
     private String name;
 
     @OneToMany
+    @JoinColumn(name = "role_id")
     private List<User> users;
 
     public UserRole() {}

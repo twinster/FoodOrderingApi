@@ -1,10 +1,16 @@
 package com.development.ordering.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.security.Timestamp;
 import java.sql.Date;
+//import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -14,8 +20,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "order_date")
-    private Date orderDate;
+    @CreationTimestamp
+    @Column(nullable = false, updatable=false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false, unique=true)
     private Date validFrom;
@@ -27,16 +38,11 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", updatable = false)
     private List<OrderDetails> orderDetails;
 
     public Order() {}
-
-    public Order(Date orderDate, User user, List<OrderDetails> orderDetails) {
-        this.orderDate = orderDate;
-        this.user = user;
-        this.orderDetails = orderDetails;
-    }
 
     public Long getId() {
         return id;
@@ -44,14 +50,6 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
     }
 
     public List<OrderDetails> getOrderDetails() {
@@ -86,10 +84,27 @@ public class Order {
         this.validTo = validTo;
     }
 
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     @PrePersist
     public void prePersist() throws Exception {
         if (orderDetails != null) orderDetails.forEach(orderDetail -> orderDetail.setOrder(this));
-        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
+        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("SUNDAY"))
             throw new Exception("Wrong Dates");
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -27,13 +27,16 @@ public class User {
     //@JsonIgnore
     @Column(nullable = false)
     private String password;
+
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
     private UserRole userRole;
+
     @Transient
     private String token;
 
     @OneToMany
+    @JoinColumn(name = "user_id")
     private List<Order> orders;
 
     public User(){}

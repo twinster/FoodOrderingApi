@@ -5,15 +5,15 @@ import com.development.ordering.model.Order;
 import com.development.ordering.model.OrderDetails;
 import com.development.ordering.model.User;
 import com.development.ordering.repository.OrderRepository;
+import com.development.ordering.repository.OrderStatusRepository;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+
 
 @Service
 public class OrdersService {
@@ -21,23 +21,27 @@ public class OrdersService {
     private OrderRepository orderRepository;
 
     @Autowired
+    private OrderStatusRepository orderStatusRepository;
+
+    @Autowired
     private Globals globals;
 
     private User loggedUser;
-
-//todo we dont need orders list
-//    public List<Order> getAllOrders() {
-//        List<Order> orders = new ArrayList<>();
-//        orderRepository.findAll().forEach(orders::add);
-//        return orders;
-//    }
     
     public Order addOrUpdateOrder(Order order) {
+        loggedUser = globals.getCurrentUser();
+        order.setUser(loggedUser);
+        order.getOrderDetails().forEach(orderDetail -> {
+            orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
+
+        });
         return orderRepository.save(order);
     }
 
-    public Order getOrder(String week, long id) {
-        return orderRepository.getOrderByUser(id, new Date());
+    public Order getOrder(String week) {
+        Date date = week.equals("current") ? new Date() : DateUtils.addDays(new Date(), 7);
+        loggedUser = globals.getCurrentUser();
+        return orderRepository.getOrderByUser(loggedUser.getId(), date);
     }
 
     public void deleteOrder(long id) {

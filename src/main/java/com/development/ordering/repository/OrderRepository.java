@@ -14,7 +14,7 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     @Query(value = "SELECT * " +
                    "FROM orders " +
-                   "WHERE user_id = :user_id AND :check_date >= valid_from AND :check_date <= valid_to",
+                   "WHERE user_id = :user_id AND :orderDate >= valid_from AND :orderDate <= valid_to",
            nativeQuery = true)
-    public Order getOrderByUser(@Param("user_id") long user_id, @Param("check_date") Date date);
+    public Order getOrderByUser(@Param("user_id") long user_id, @Param("orderDate") Date orderDate);
 }

@@ -99,7 +99,7 @@ public class Menu {
 
         //this.validTo.toLocalDate().toEpochDay() - this.validFrom.toLocalDate().toEpochDay() != 4
 
-        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("FRIDAY"))
+        if (!this.validFrom.toLocalDate().getDayOfWeek().toString().equals("MONDAY") || !this.validTo.toLocalDate().getDayOfWeek().toString().equals("SUNDAY"))
             throw new Exception("Wrong Dates");
     }
 }

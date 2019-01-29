@@ -173,6 +173,6 @@ public class UserService {
     }
 
     private boolean validateAdminPermission(User oldUser){
-        return loggedUser.getUserRole().getName().equals("ADMIN") && oldUser.getUserRole().getName().equals("ADMIN");
+        return loggedUser.getUserRole().getName().equals("ADMIN") && oldUser.getUserRole().getName().equals("ADMIN") && !loggedUser.getId().equals(oldUser.getId());
     }
 }
