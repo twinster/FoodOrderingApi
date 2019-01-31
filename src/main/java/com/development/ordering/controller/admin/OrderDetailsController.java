@@ -24,7 +24,7 @@ public class OrderDetailsController {
         return ordersService.getAllNeededOrders(name);
     }
 
-    @RequestMapping(method= RequestMethod.GET, value="/set_status/{id}")
+    @RequestMapping(method= RequestMethod.POST, value="/set_status/{id}")
     public OrderDetails setStatus(@RequestParam String name, @PathVariable Long id){
         return ordersService.setStatus(id, name);
     }
