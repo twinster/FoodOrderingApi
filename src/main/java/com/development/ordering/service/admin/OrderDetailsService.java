@@ -4,11 +4,12 @@ import com.development.ordering.model.OrderDetails;
 import com.development.ordering.model.OrderStatus;
 import com.development.ordering.repository.OrderDetailsRepository;
 import com.development.ordering.repository.OrderStatusRepository;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderDetailsService {
@@ -20,10 +21,8 @@ public class OrderDetailsService {
     public OrderStatusRepository orderStatusRepository;
 
     public List<OrderDetails> getAllNeededOrders(String name) {
-        List<OrderDetails> orderDetails = new ArrayList<>();
         OrderStatus orderStatus = orderStatusRepository.getOrderStatusByEnglishName(name);
-        orderDetailsRepository.findAllByOrderStatus(orderStatus).forEach(orderDetails::add);
-        return orderDetails;
+        return new ArrayList<>(orderDetailsRepository.findAllByOrderStatus(orderStatus));
     }
 
     public OrderDetails getOrderDetail(Long id){
@@ -35,5 +34,24 @@ public class OrderDetailsService {
         OrderStatus orderStatus = orderStatusRepository.getOrderStatusByEnglishName(name);
         orderDetail.setOrderStatus(orderStatus);
         return orderDetailsRepository.save(orderDetail);
+    }
+
+    public Map<String, Integer> getSumOfTheMeals(String week){
+        Date date = week.equals("current") ? new Date() : DateUtils.addDays(new Date(), 7);
+        List<OrderDetails> orderDetails = new ArrayList<>(orderDetailsRepository.getOrderDetails(date));
+        Map<String, Integer> dictionary = new HashMap<>();
+        orderDetails.forEach(orderDetail -> {
+           String orderText = orderDetail.getOrderText();
+            for (String s : orderText.split(",\\s*")) {
+                if(dictionary.get(s) != null){
+                    dictionary.replace(s, dictionary.get(s) + 1);
+                }
+                else{
+                    dictionary.put(s, 1);
+                }
+            }
+        });
+
+        return dictionary;
     }
 }

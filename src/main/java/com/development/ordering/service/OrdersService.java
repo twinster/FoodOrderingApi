@@ -9,11 +9,7 @@ import com.development.ordering.repository.OrderStatusRepository;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.Map;
-
 
 @Service
 public class OrdersService {
@@ -28,12 +24,19 @@ public class OrdersService {
 
     private User loggedUser;
     
-    public Order addOrUpdateOrder(Order order) {
+    public Order addOrUpdateOrder(Order order){
         loggedUser = globals.getCurrentUser();
         order.setUser(loggedUser);
         order.getOrderDetails().forEach(orderDetail -> {
-            orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
-
+            //todo ensure that id while creating object is always null
+            if (orderDetail.getOrderStatus().getEnglishName().equals("Confirmed"))
+                try {
+                    throw new Exception("Order for this day is already confirmed and can not be changed");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            if (order.getId() == null)
+                orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
         });
         return orderRepository.save(order);
     }

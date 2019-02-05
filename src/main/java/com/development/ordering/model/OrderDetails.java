@@ -2,6 +2,7 @@ package com.development.ordering.model;
 
 import com.development.ordering.repository.OrderStatusRepository;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang.SerializationUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -32,7 +33,7 @@ public class OrderDetails {
     private Menu menu;
 
     @JsonIgnoreProperties("orderDetails")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Order order;
@@ -48,6 +49,9 @@ public class OrderDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "week_day_id", nullable = false)
     private WeekDays weekDay;
+
+    @Transient
+    private transient Object oldObject;
 
     public OrderDetails() {}
 
@@ -115,11 +119,17 @@ public class OrderDetails {
         this.weekDay = weekDay;
     }
 
-    @PreUpdate
-    private void preUpdate() throws Exception {
-        if (this.getOrderStatus().getEnglishName().equals("Confirmed"))
-            throw new Exception("Cant change order for this day, order is already confirmed");
-    }
+//    @PostLoad
+//    private void postLoad(){
+//        this.oldObject = SerializationUtils.clone(this);
+//    }
+//
+//    @PreUpdate
+//    private void preUpdate() throws Exception {
+//        OrderDetails orderDetails = (OrderDetails) this.oldObject;
+//        if (orderDetails.getOrderStatus().getEnglishName().equals("Confirmed"))
+//            throw new Exception("Cant change order for this day, order is already confirmed");
+//    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
