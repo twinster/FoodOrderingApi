@@ -1,6 +1,8 @@
 package com.development.ordering.controller.admin;
 
 import com.development.ordering.model.Company;
+import com.development.ordering.model.WeekDays;
+import com.development.ordering.repository.WeekDaysRepository;
 import com.development.ordering.service.admin.CompaniesService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ import java.util.List;
 public class CompaniesController {
     @Autowired
     private CompaniesService companyService;
+
+    @Autowired
+    private WeekDaysRepository weekDaysRepository;
 
     @RequestMapping(method= RequestMethod.GET, value="/list")
     public List<Company> getAllCompanies() {
@@ -46,5 +51,10 @@ public class CompaniesController {
     public ResponseEntity<?> deleteCompany(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
         companyService.deleteCompany(id);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="/weekDays")
+    public List<WeekDays> getWeekDays() throws ResourceNotFoundException {
+        return (List<WeekDays>) weekDaysRepository.findAll();
     }
 }
