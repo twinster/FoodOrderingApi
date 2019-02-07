@@ -2,7 +2,6 @@ package com.development.ordering.service;
 
 import com.development.ordering.Globals;
 import com.development.ordering.model.Order;
-import com.development.ordering.model.OrderDetails;
 import com.development.ordering.model.User;
 import com.development.ordering.repository.OrderRepository;
 import com.development.ordering.repository.OrderStatusRepository;
@@ -28,14 +27,7 @@ public class OrdersService {
         loggedUser = globals.getCurrentUser();
         order.setUser(loggedUser);
         order.getOrderDetails().forEach(orderDetail -> {
-            //todo ensure that id while creating object is always null
-            if (orderDetail.getOrderStatus().getEnglishName().equals("Confirmed"))
-                try {
-                    throw new Exception("Order for this day is already confirmed and can not be changed");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            if (order.getId() == null)
+            if (orderDetail.getId() == null)
                 orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
         });
         return orderRepository.save(order);
