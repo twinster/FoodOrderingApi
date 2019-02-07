@@ -1,14 +1,20 @@
 package com.development.ordering.service;
 
 import com.development.ordering.Globals;
+import com.development.ordering.model.Menu;
 import com.development.ordering.model.Order;
+import com.development.ordering.model.OrderDetails;
 import com.development.ordering.model.User;
+import com.development.ordering.repository.MenuRepository;
 import com.development.ordering.repository.OrderRepository;
 import com.development.ordering.repository.OrderStatusRepository;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class OrdersService {
@@ -17,6 +23,9 @@ public class OrdersService {
 
     @Autowired
     private OrderStatusRepository orderStatusRepository;
+
+    @Autowired
+    private MenuRepository menuRepository;
 
     @Autowired
     private Globals globals;
@@ -41,5 +50,10 @@ public class OrdersService {
 
     public void deleteOrder(long id) {
         orderRepository.deleteById(id);
+    }
+
+    public List<Menu> getMenus(String week) {
+        Date date = week.equals("current") ? new Date() : DateUtils.addDays(new Date(), 7);
+        return menuRepository.getMenuByWeek(date);
     }
 }

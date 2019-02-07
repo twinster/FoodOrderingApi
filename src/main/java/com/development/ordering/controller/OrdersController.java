@@ -1,5 +1,6 @@
 package com.development.ordering.controller;
 
+import com.development.ordering.model.Menu;
 import com.development.ordering.model.Order;
 import com.development.ordering.service.OrdersService;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,6 +27,11 @@ public class OrdersController {
     @RequestMapping(method=RequestMethod.GET, value="/edit")
     public ResponseEntity<Order> getOrder(@RequestParam String week) throws ResourceNotFoundException {
         return ResponseEntity.ok().body(ordersService.getOrder(week));
+    }
+
+    @RequestMapping(method=RequestMethod.GET, value="/orderMenus")
+    public ResponseEntity<List<Menu>> getMenus(@RequestParam String week) throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(ordersService.getMenus(week));
     }
 
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
