@@ -21,8 +21,8 @@ public class OrderDetailsController {
     private OrderDetailsService ordersService;
 
     @RequestMapping(method= RequestMethod.GET, value="/list")
-    public ResponseEntity<List<OrderDetails>> getAllPendingOrders(@RequestParam String name) {
-        return ResponseEntity.ok().body(ordersService.getAllNeededOrders(name));
+    public ResponseEntity<List<OrderDetails>> getAllPendingOrders(@RequestParam String name, @RequestParam String week) {
+        return ResponseEntity.ok().body(ordersService.getAllNeededOrders(name, week));
     }
 
     @RequestMapping(method= RequestMethod.POST, value="/set_status/{id}")

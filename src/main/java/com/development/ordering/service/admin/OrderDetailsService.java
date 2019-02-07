@@ -20,9 +20,10 @@ public class OrderDetailsService {
     @Autowired
     public OrderStatusRepository orderStatusRepository;
 
-    public List<OrderDetails> getAllNeededOrders(String name) {
-        OrderStatus orderStatus = orderStatusRepository.getOrderStatusByEnglishName(name);
-        return new ArrayList<>(orderDetailsRepository.findAllByOrderStatus(orderStatus));
+    public List<OrderDetails> getAllNeededOrders(String name, String week) {
+        Date date = getWeekDate(week);
+        //OrderStatus orderStatus = orderStatusRepository.getOrderStatusByEnglishName(name);
+        return new ArrayList<>(orderDetailsRepository.getOrderDetails(date, name));
     }
 
     public OrderDetails getOrderDetail(Long id){
@@ -37,8 +38,8 @@ public class OrderDetailsService {
     }
 
     public Map<String, Integer> getSumOfTheMeals(String week){
-        Date date = week.equals("current") ? new Date() : DateUtils.addDays(new Date(), 7);
-        List<OrderDetails> orderDetails = new ArrayList<>(orderDetailsRepository.getOrderDetails(date));
+        Date date = getWeekDate(week);
+        List<OrderDetails> orderDetails = new ArrayList<>(orderDetailsRepository.getOrderDetails(date, "Confirmed"));
         Map<String, Integer> dictionary = new HashMap<>();
         orderDetails.forEach(orderDetail -> {
            String orderText = orderDetail.getOrderText();
@@ -53,5 +54,9 @@ public class OrderDetailsService {
         });
 
         return dictionary;
+    }
+
+    private Date getWeekDate(String week) {
+        return week.equals("current") ? new Date() : DateUtils.addDays(new Date(), 7);
     }
 }
