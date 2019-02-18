@@ -36,7 +36,7 @@ public class User {
     private String token;
 
     @OneToMany
-    @JoinColumn(name = "user_id")
+    //@JoinColumn(name = "user_id")
     private List<Order> orders;
 
     public User(){}
