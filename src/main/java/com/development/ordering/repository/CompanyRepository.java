@@ -1,9 +1,7 @@
 package com.development.ordering.repository;
 
 import com.development.ordering.model.Company;
-import com.development.ordering.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -40,7 +40,7 @@ public class Menu {
 
     public Menu() { }
 
-    public Menu(String path, Integer week_num, Long company_id) {
+    public Menu(String path, Integer week_num) {
         this.setPath(path);
         this.setWeekNum(week_num);
     }
