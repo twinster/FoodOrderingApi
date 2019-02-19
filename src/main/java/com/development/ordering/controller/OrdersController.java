@@ -25,7 +25,7 @@ public class OrdersController {
     private WeekDaysRepository weekDaysRepository;
 
     @RequestMapping(method=RequestMethod.POST, value="/")
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) throws Exception {
         return ResponseEntity.ok().body(ordersService.addOrUpdateOrder(order));
     }
 
@@ -40,7 +40,7 @@ public class OrdersController {
     }
 
     @RequestMapping(method=RequestMethod.PUT, value="/{id}")
-    public ResponseEntity<Order> updateOrder(@Valid @RequestBody Order order, @PathVariable(value = "id") long id) {
+    public ResponseEntity<Order> updateOrder(@Valid @RequestBody Order order, @PathVariable(value = "id") long id) throws Exception {
         return  ResponseEntity.ok().body(ordersService.addOrUpdateOrder(order));
     }
 

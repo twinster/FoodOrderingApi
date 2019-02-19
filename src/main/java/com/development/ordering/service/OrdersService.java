@@ -32,13 +32,22 @@ public class OrdersService {
 
     private User loggedUser;
     
-    public Order addOrUpdateOrder(Order order){
+    public Order addOrUpdateOrder(Order order) throws Exception {
         loggedUser = globals.getCurrentUser();
         order.setUser(loggedUser);
+        final String[] error = {""};
         order.getOrderDetails().forEach(orderDetail -> {
             if (orderDetail.getId() == null)
                 orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
+
+            if (orderDetail.getOrderStatus().getEnglishName().equals("Confirmed")){
+                error[0] = "Order is already confirmed and cant be changed";
+            }
         });
+
+        if (!error[0].equals(""))
+            throw new Exception(error[0]);
+
         return orderRepository.save(order);
     }
 
