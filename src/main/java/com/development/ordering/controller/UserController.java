@@ -7,6 +7,7 @@ import com.development.ordering.service.UserService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,13 @@ public class UserController {
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
     public User saveUser(@RequestBody UserDto userDto, @PathVariable(value = "id") Long id) throws Exception{
-        User user = userService.convertToEntity(userDto);
-        return userService.userSave(user);
+        try{
+            User user = userService.convertToEntity(userDto);
+            return userService.userSave(user);
+        }catch (DataIntegrityViolationException e)
+        {
+            throw new DataIntegrityViolationException("Username or email already exists");
+        }
     }
 
     @RequestMapping(value="/changePassword/{id}", method = RequestMethod.POST)

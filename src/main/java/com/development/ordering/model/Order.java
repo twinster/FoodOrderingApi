@@ -23,10 +23,10 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false, unique=true)
+    @Column(nullable = false)
     private Date validFrom;
 
-    @Column(nullable = false, unique=true)
+    @Column(nullable = false)
     private Date validTo;
 
     @ManyToOne

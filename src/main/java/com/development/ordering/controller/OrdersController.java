@@ -2,6 +2,8 @@ package com.development.ordering.controller;
 
 import com.development.ordering.model.Menu;
 import com.development.ordering.model.Order;
+import com.development.ordering.model.WeekDays;
+import com.development.ordering.repository.WeekDaysRepository;
 import com.development.ordering.service.OrdersService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import java.util.List;
 public class OrdersController {
     @Autowired
     private OrdersService ordersService;
+
+    @Autowired
+    private WeekDaysRepository weekDaysRepository;
 
     @RequestMapping(method=RequestMethod.POST, value="/")
     public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
@@ -45,4 +50,9 @@ public class OrdersController {
         return ResponseEntity.ok().build();
     }
 
+
+    @RequestMapping(method=RequestMethod.GET, value="/weekDays")
+    public List<WeekDays> getWeekDays() throws ResourceNotFoundException {
+        return (List<WeekDays>) weekDaysRepository.findAll();
+    }
 }
