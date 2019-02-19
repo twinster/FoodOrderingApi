@@ -2,12 +2,16 @@ package com.development.ordering.controller.admin;
 
 import com.development.ordering.model.User;
 import com.development.ordering.model.UserDto;
+import com.development.ordering.model.UserRole;
+import com.development.ordering.repository.UserRoleRepository;
 import com.development.ordering.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -18,6 +22,9 @@ public class UsersController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List listUser(){
@@ -31,7 +38,11 @@ public class UsersController {
 
     @RequestMapping(value="/", method = RequestMethod.POST)
     public User createUser(@RequestBody User user) throws Exception{
-        return userService.userCreate(user);
+        try {
+            return userService.userCreate(user);
+        }catch (DataIntegrityViolationException e){
+            throw new DataIntegrityViolationException("Username or email already exists");
+        }
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.PUT)
@@ -41,6 +52,8 @@ public class UsersController {
             return userService.userSave(user);
         }catch (NullPointerException e){
             throw new NullPointerException("Not Found Object");
+        }catch (DataIntegrityViolationException e){
+            throw new DataIntegrityViolationException("Username or email already exists");
         }
     }
 
@@ -52,5 +65,10 @@ public class UsersController {
         }catch (Exception e){
             throw e;
         }
+    }
+
+    @RequestMapping(value = "/user_roles", method = RequestMethod.GET)
+    public List<UserRole> getUserRoles(){
+        return (List<UserRole>) userRoleRepository.findAll();
     }
 }

@@ -3,12 +3,15 @@ package com.development.ordering.service.admin;
 import com.development.ordering.model.Menu;
 import com.development.ordering.repository.MenuRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,13 +39,7 @@ public class MenuService {
         }
     }
 
-    public Menu addOrUpdateMenu(Menu menu){
-//        if (week.equals("current")){
-//            Date date = new Date();
-//            Calendar cal = Calendar.getInstance();
-//            cal.setTime(date);
-//            menu.setWeekNum(cal.get(Calendar.WEEK_OF_YEAR));
-//        }
+    public Menu addOrUpdateMenu(Menu menu) {
         return menuRepository.save(menu);
     }
 
