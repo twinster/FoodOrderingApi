@@ -62,8 +62,8 @@ public class UsersController {
         try {
             userService.deleteUser(id);
             return true;
-        }catch (Exception e){
-            throw e;
+        }catch (DataIntegrityViolationException e){
+            throw new DataIntegrityViolationException("Delete is impossible, user has orders");
         }
     }
 
