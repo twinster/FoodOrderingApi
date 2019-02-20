@@ -6,8 +6,10 @@ import com.development.ordering.model.Order;
 import com.development.ordering.model.OrderDetails;
 import com.development.ordering.model.User;
 import com.development.ordering.repository.MenuRepository;
+import com.development.ordering.repository.OrderDetailsRepository;
 import com.development.ordering.repository.OrderRepository;
 import com.development.ordering.repository.OrderStatusRepository;
+import com.development.ordering.service.admin.OrderDetailsService;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class OrdersService {
     private MenuRepository menuRepository;
 
     @Autowired
+    private OrderDetailsService orderDetailsService;
+
+    @Autowired
     private Globals globals;
 
     private User loggedUser;
@@ -37,7 +42,8 @@ public class OrdersService {
         order.setUser(loggedUser);
         final String[] error = {""};
         order.getOrderDetails().forEach(orderDetail -> {
-            if (orderDetail.getId() == null)
+            OrderDetails oldOrderDetail = orderDetailsService.getOrderDetail(orderDetail.getId());
+            if (oldOrderDetail == null || (oldOrderDetail.getOrderStatus().getEnglishName().equals("Cancelled") && !oldOrderDetail.getOrderText().equals(orderDetail.getOrderText())))
                 orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
 
             if (orderDetail.getOrderStatus().getEnglishName().equals("Confirmed")){
