@@ -46,7 +46,7 @@ public class OrdersService {
             if (oldOrderDetail == null || (oldOrderDetail.getOrderStatus().getEnglishName().equals("Cancelled") && !oldOrderDetail.getOrderText().equals(orderDetail.getOrderText())))
                 orderDetail.setOrderStatus(orderStatusRepository.getOrderStatusByEnglishName("Pending"));
 
-            if (orderDetail.getOrderStatus().getEnglishName().equals("Confirmed")){
+            if (oldOrderDetail != null && oldOrderDetail.getOrderStatus().getEnglishName().equals("Confirmed")){
                 error[0] = "Order is already confirmed and cant be changed";
             }
         });
